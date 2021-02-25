@@ -13,6 +13,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.Store.Context;
+using WebAPI.Store.IRepositories;
+using WebAPI.Store.IServices;
+using WebAPI.Store.Repositories;
+using WebAPI.Store.Services;
 
 namespace WebAPICore5
 {
@@ -37,6 +41,8 @@ namespace WebAPICore5
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPICore5", Version = "v1" });
             });
 
+            services.AddTransient<IProductRepository, ProductRepository>()
+                .AddTransient<IProductService, ProductService>();
             services.AddTransient<StoreContext>(x => new StoreContext(connentionString, migrationAssemblyName));
 
 
