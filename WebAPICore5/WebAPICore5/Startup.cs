@@ -43,6 +43,10 @@ namespace WebAPICore5
 
             services.AddTransient<IProductRepository, ProductRepository>()
                 .AddTransient<IProductService, ProductService>();
+
+            services.AddTransient<IUserRepository, UserRepository>()
+                .AddTransient<IUserService, UserService>();
+
             services.AddTransient<StoreContext>(x => new StoreContext(connentionString, migrationAssemblyName));
 
 
