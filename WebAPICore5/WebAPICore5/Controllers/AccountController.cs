@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -14,10 +15,12 @@ namespace WebAPICore5.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IUserService userService;
+        private readonly Microsoft.AspNetCore.Identity.IPasswordHasher<User> passwordHasher;
 
-        public AccountController(IUserService userService)
+        public AccountController(IUserService userService, IPasswordHasher<User> passwordHasher)
         {
             this.userService = userService;
+            this.passwordHasher = passwordHasher;
         }
 
         [HttpPost("register")]
@@ -32,10 +35,11 @@ namespace WebAPICore5.Controllers
             var newUser = new User()
             {
                 Email = model.Email,
-                passwordHash = model.password,
                 DateOfBirth = model.DateOfBirth,
                 RoleId = model.RoleId
             };
+            var passwordHash = passwordHasher.HashPassword(newUser, model.password);
+            newUser.passwordHash = passwordHash;
 
             userService.Register(newUser);
 
