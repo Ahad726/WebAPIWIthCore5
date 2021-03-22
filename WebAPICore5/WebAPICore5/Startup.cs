@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -19,6 +21,8 @@ using WebAPI.Store.IRepositories;
 using WebAPI.Store.IServices;
 using WebAPI.Store.Repositories;
 using WebAPI.Store.Services;
+using WebAPICore5.Models;
+using WebAPICore5.Validations;
 
 namespace WebAPICore5
 {
@@ -37,7 +41,11 @@ namespace WebAPICore5
             var connentionString = Configuration.GetConnectionString("DefaultConnection");
             var migrationAssemblyName = typeof(Startup).Assembly.FullName;
 
-            services.AddControllers();
+            services.AddControllers().AddFluentValidation();
+
+            // added this line for custome fluentValidation to work
+            services.AddTransient<IValidator<RegisterModel>, RegisterUserValidator>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPICore5", Version = "v1" });

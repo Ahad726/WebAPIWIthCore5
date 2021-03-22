@@ -38,7 +38,7 @@ namespace WebAPICore5.Controllers
                 DateOfBirth = model.DateOfBirth,
                 RoleId = model.RoleId
             };
-            var passwordHash = passwordHasher.HashPassword(newUser, model.password);
+            var passwordHash = passwordHasher.HashPassword(newUser, model.Password);
             newUser.passwordHash = passwordHash;
 
             userService.Register(newUser);
