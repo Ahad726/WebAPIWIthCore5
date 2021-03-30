@@ -10,10 +10,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using WebAPI.Core;
 using WebAPI.Store.Context;
@@ -21,6 +23,7 @@ using WebAPI.Store.IRepositories;
 using WebAPI.Store.IServices;
 using WebAPI.Store.Repositories;
 using WebAPI.Store.Services;
+using WebAPICore5.Identity;
 using WebAPICore5.Models;
 using WebAPICore5.Validations;
 
@@ -38,6 +41,29 @@ namespace WebAPICore5
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var jwtOption = new JwtOption();
+            Configuration.GetSection("jwt").Bind(jwtOption);
+
+            services.AddSingleton(jwtOption);
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = "Bearer";
+                options.DefaultScheme = "Bearer";
+                options.DefaultChallengeScheme = "Bearer";
+
+            }).AddJwtBearer(cfg =>
+            {
+                cfg.RequireHttpsMetadata = false;
+                cfg.TokenValidationParameters = new TokenValidationParameters
+                {
+                   ValidIssuer = jwtOption.JwtIssuer,
+                   ValidAudience = jwtOption.JwtIssuer,
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOption.JwtKey))
+                };
+            });
+
+
             var connentionString = Configuration.GetConnectionString("DefaultConnection");
             var migrationAssemblyName = typeof(Startup).Assembly.FullName;
 
@@ -51,7 +77,8 @@ namespace WebAPICore5
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPICore5", Version = "v1" });
             });
 
-            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddTransient<IJwtProvider, JwtProvvider>();
 
             services.AddTransient<IProductRepository, ProductRepository>()
                 .AddTransient<IProductService, ProductService>();
@@ -75,6 +102,7 @@ namespace WebAPICore5
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebAPICore5 v1"));
             }
 
+            app.UseAuthentication();
             app.UseHttpsRedirection();
 
             app.UseRouting();
