@@ -12,6 +12,7 @@ using WebAPI.Store.IServices;
 namespace WebAPICore5.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -23,6 +24,7 @@ namespace WebAPICore5.Controllers
         }
         // GET: api/<ProductController>
         [HttpGet]
+        [AllowAnonymous]
         public IEnumerable<Product> Get()
         {
             
@@ -41,6 +43,7 @@ namespace WebAPICore5.Controllers
         [HttpPost]
         public void Post([FromBody] string value)
         {
+
         }
 
         // PUT api/<ProductController>/5
