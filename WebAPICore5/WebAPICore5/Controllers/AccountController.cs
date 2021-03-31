@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebAPI.Core;
 using WebAPI.Store.IServices;
+using WebAPICore5.Identity;
 using WebAPICore5.Models;
 
 namespace WebAPICore5.Controllers
@@ -16,11 +17,13 @@ namespace WebAPICore5.Controllers
     {
         private readonly IUserService userService;
         private readonly Microsoft.AspNetCore.Identity.IPasswordHasher<User> passwordHasher;
+        private readonly IJwtProvider jwtProvider;
 
-        public AccountController(IUserService userService, IPasswordHasher<User> passwordHasher)
+        public AccountController(IUserService userService, IPasswordHasher<User> passwordHasher, IJwtProvider jwtProvider)
         {
             this.userService = userService;
             this.passwordHasher = passwordHasher;
+            this.jwtProvider = jwtProvider;
         }
 
         [HttpPost("register")]
@@ -44,6 +47,28 @@ namespace WebAPICore5.Controllers
             userService.Register(newUser);
 
             return Ok();
+        }
+
+        [HttpPost("login")]
+        public ActionResult Login([FromBody] LoginModel loginModel)
+        {
+            var user = userService.GetUser(loginModel.Email);
+
+            if (user == null)
+            {
+                return BadRequest("Invalid username or password");
+
+            }
+
+            var passwordVerificationResult = passwordHasher.VerifyHashedPassword(user, user.passwordHash, loginModel.Password);
+            if (passwordVerificationResult == PasswordVerificationResult.Failed)
+            {
+                return BadRequest("Invalid username or password");
+
+            }
+            var token = jwtProvider.GenerateToken(user);
+            return Ok(token);
+
         }
     }
 }

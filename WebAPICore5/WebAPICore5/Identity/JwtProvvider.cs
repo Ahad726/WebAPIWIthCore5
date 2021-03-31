@@ -10,6 +10,7 @@ using WebAPI.Core;
 
 namespace WebAPICore5.Identity
 {
+    // this class generate JWT token based on user field
     public class JwtProvvider : IJwtProvider
     {
         private readonly JwtOption jwtOption;

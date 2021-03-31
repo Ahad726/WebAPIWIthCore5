@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,13 @@ namespace WebAPI.Store.Repositories
         }
         public User GetUserByEmail(string email)
         {
-           return context.Users.Where(u => u.Email == email).FirstOrDefault();
+            
+            var user =  context.Users.Include(user => user.Role).FirstOrDefault(user => user.Email == email);
+            return user;
+
+            //return context.Users.Where(u => u.Email == email).FirstOrDefault();
+
+
         }
 
         public void Registeruser(User user)

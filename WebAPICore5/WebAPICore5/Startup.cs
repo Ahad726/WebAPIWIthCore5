@@ -103,7 +103,7 @@ namespace WebAPICore5
             }
 
             app.UseAuthentication();
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
