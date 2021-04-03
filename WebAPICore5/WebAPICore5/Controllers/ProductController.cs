@@ -44,6 +44,7 @@ namespace WebAPICore5.Controllers
 
         // POST api/<ProductController>
         [HttpPost]
+        [Authorize(Roles ="Admin, Moderator")]
         public void Post([FromBody] IList<ProductModel> products)
         {
             productService.AddProducts(products);
