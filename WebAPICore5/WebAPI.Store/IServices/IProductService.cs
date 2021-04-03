@@ -11,5 +11,6 @@ namespace WebAPI.Store.IServices
     {
         IList<Product> GetProducts();
         Product GetProductById(int id);
+        void AddProducts(IEnumerable<Product> products);
     }
 }

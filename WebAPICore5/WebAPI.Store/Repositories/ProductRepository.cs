@@ -17,28 +17,9 @@ namespace WebAPI.Store.Repositories
         {
             this.context = context;
         }
-        public void Add()
+        public void Add(IEnumerable<Product> products)
         {
-            var productList = new List<Product>
-            {
-                new Product
-                {
-                    Name="Camera",
-                    Price = 100
-                },
-                new Product
-                {
-                    Name = "Laptop",
-                    Price = 500
-                },
-                new Product
-                {
-                    Name = "TV",
-                    Price = 300
-                }
-            };
-
-            context.Products.AddRange(productList);
+            context.Products.AddRange(products);
             context.SaveChanges();
         }
 

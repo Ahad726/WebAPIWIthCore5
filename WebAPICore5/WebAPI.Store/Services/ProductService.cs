@@ -19,13 +19,18 @@ namespace WebAPI.Store.Services
         }
         public Product GetProductById(int id)
         {
-            productRepository.Add();
             return productRepository.GetById(id);
         }
 
         public IList<Product> GetProducts()
         {
             return productRepository.GetAllProduct();
+        }
+
+        public void AddProducts(IEnumerable<Product> products)
+        {
+            productRepository.Add(products);
+
         }
     }
 }

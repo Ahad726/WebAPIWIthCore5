@@ -9,7 +9,7 @@ namespace WebAPI.Store.IRepositories
 {
     public interface IProductRepository
     {
-        void Add();
+        void Add(IEnumerable<Product> products);
         IList<Product> GetAllProduct();
         Product GetById(int id);
     }
