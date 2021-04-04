@@ -30,6 +30,13 @@ namespace WebAPICore5.Identity
                 new Claim("DateOfBirth", user.DateOfBirth.ToString())
             };
 
+            if (!string.IsNullOrEmpty(user.Nationality))
+            {
+                claims.Add(
+                    new Claim("Nationality", user.Nationality)
+                );
+            }
+
             var key =new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOption.JwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var expires = DateTime.Now.AddDays(jwtOption.JwtExpireDays);

@@ -40,6 +40,7 @@ namespace WebAPICore5.Controllers
                 Name = model.Name,
                 Email = model.Email,
                 DateOfBirth = model.DateOfBirth,
+                Nationality = model.Nationality,
                 RoleId = model.RoleId
             };
             var passwordHash = passwordHasher.HashPassword(newUser, model.Password);

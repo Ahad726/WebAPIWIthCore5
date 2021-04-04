@@ -41,6 +41,10 @@ namespace WebAPICore5
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var connentionString = Configuration.GetConnectionString("DefaultConnection");
+            var migrationAssemblyName = typeof(Startup).Assembly.FullName;
+
+
             var jwtOption = new JwtOption();
             Configuration.GetSection("jwt").Bind(jwtOption);
 
@@ -57,15 +61,16 @@ namespace WebAPICore5
                 cfg.RequireHttpsMetadata = false;
                 cfg.TokenValidationParameters = new TokenValidationParameters
                 {
-                   ValidIssuer = jwtOption.JwtIssuer,
-                   ValidAudience = jwtOption.JwtIssuer,
-                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOption.JwtKey))
+                    ValidIssuer = jwtOption.JwtIssuer,
+                    ValidAudience = jwtOption.JwtIssuer,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOption.JwtKey))
                 };
             });
 
-
-            var connentionString = Configuration.GetConnectionString("DefaultConnection");
-            var migrationAssemblyName = typeof(Startup).Assembly.FullName;
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality"));
+            });
 
             services.AddControllers().AddFluentValidation();
 

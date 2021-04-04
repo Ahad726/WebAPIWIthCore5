@@ -25,17 +25,18 @@ namespace WebAPICore5.Controllers
         {
             this.productService = productService;
         }
+
         // GET: api/<ProductController>
         [HttpGet]
         [AllowAnonymous]
         public IEnumerable<Product> Get()
         {
-            
             return productService.GetProducts();
         }
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
+        [Authorize(Policy = "HasNationality")]   // Authorized user have this particular claim can access.
         public Product Get(int id)
         {
             return productService.GetProductById(id);
@@ -44,12 +45,10 @@ namespace WebAPICore5.Controllers
 
         // POST api/<ProductController>
         [HttpPost]
-        [Authorize(Roles ="Admin, Moderator")]
+        [Authorize(Roles ="Admin, Moderator")]  // the authorized user who have Admin and moderator role , can access.
         public void Post([FromBody] IList<ProductModel> products)
         {
             productService.AddProducts(products);
-
-
         }
 
         // PUT api/<ProductController>/5
