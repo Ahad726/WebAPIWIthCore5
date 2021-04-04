@@ -37,6 +37,7 @@ namespace WebAPICore5.Controllers
 
             var newUser = new User()
             {
+                Name = model.Name,
                 Email = model.Email,
                 DateOfBirth = model.DateOfBirth,
                 RoleId = model.RoleId
