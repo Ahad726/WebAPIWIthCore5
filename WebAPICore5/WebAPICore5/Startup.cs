@@ -69,7 +69,7 @@ namespace WebAPICore5
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality"));
+                options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality", "Bangladesh"));
             });
 
             services.AddControllers().AddFluentValidation();
