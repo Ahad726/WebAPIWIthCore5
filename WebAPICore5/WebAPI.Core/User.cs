@@ -11,6 +11,7 @@ namespace WebAPI.Core
         public string  Email { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string passwordHash { get; set; }
+        public string Nationality { get; set; }
         public int RoleId { get; set; }
         public Role Role { get; set; }
     }
