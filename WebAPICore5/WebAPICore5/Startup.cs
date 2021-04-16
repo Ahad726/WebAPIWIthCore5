@@ -1,5 +1,6 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -23,6 +24,7 @@ using WebAPI.Store.IRepositories;
 using WebAPI.Store.IServices;
 using WebAPI.Store.Repositories;
 using WebAPI.Store.Services;
+using WebAPICore5.Authorization;
 using WebAPICore5.Identity;
 using WebAPICore5.Models;
 using WebAPICore5.Validations;
@@ -70,7 +72,11 @@ namespace WebAPICore5
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("HasNationality", builder => builder.RequireClaim("Nationality", "Bangladesh"));
+                options.AddPolicy("AtLeast18", builder => builder.AddRequirements(new MinimumageRequirement(18)));
+
             });
+
+            
 
             services.AddControllers().AddFluentValidation();
 
@@ -81,6 +87,8 @@ namespace WebAPICore5
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "WebAPICore5", Version = "v1" });
             });
+
+            services.AddTransient<IAuthorizationHandler, MinimumAgeHandler>();
 
             services.AddTransient<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddTransient<IJwtProvider, JwtProvvider>();

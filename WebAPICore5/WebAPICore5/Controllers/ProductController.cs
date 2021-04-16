@@ -37,6 +37,7 @@ namespace WebAPICore5.Controllers
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
         [Authorize(Policy = "HasNationality")]   // Authorized user have this particular claim can access.
+        [Authorize(Policy = "AtLeast18")]   // Authorized user have this particular claim can access.
         public Product Get(int id)
         {
             return productService.GetProductById(id);
@@ -61,6 +62,7 @@ namespace WebAPICore5.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+          
         }
     }
 }
